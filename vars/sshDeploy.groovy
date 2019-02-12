@@ -5,7 +5,7 @@ def call(String yamlName) {
         yaml.steps.each { stageName, step ->
             step.each {
                 def remoteGroups = [:]
-                def allRemotes = []
+                def allRemotes = [:]
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
                     return true
