@@ -1,4 +1,31 @@
 #!/usr/bin/env groovy
+package hudson.remoting;
+
+import java.io.IOException;
+import javax.annotation.Nonnull;
+
+public class ProxyException extends IOException {
+    public ProxyException(@Nonnull Throwable cause) {
+        super(cause.toString()); // use toString() to capture the class name and error message
+        setStackTrace(cause.getStackTrace());
+
+        // wrap all the chained exceptions
+        if(cause.getCause()!=null)
+            initCause(new ProxyException(cause.getCause()));
+
+        for (Throwable suppressed : cause.getSuppressed()) {
+            addSuppressed(new ProxyException(suppressed));
+        }
+    }
+
+    /**
+     * {@link ProxyException} all the way down.
+     */
+    @Override
+    public ProxyException getCause() {
+        return (ProxyException)super.getCause();
+    }
+}
 
 def call(String yamlName, boolean dryRun) {
     sshDeploy(yaml, dryRun)
