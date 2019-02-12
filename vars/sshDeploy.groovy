@@ -1,11 +1,11 @@
 #!/usr/bin/env groovy
 def call(String yamlName) {
-    def yaml = readYaml file: yamlName
+    def yaml = readYaml file: deploy.yml
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
                 def remoteGroups = [:]
-                def allRemotes = [:]
+                def allRemotes = []
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
                     return true
