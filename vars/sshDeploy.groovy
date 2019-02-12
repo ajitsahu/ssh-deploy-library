@@ -6,6 +6,9 @@ def call(String yamlName) {
         yaml.steps.each { stageName, step ->
             step.each {
                 def remoteGroups = [:]
+                    wrappers {
+                       timestamps()
+                    }
                 def allRemotes = []
                 println remoteGroups[allRemotes]
                 it.remote_groups.each {
