@@ -6,10 +6,10 @@ def call(String yamlName) {
         yaml.steps.each { stageName, step ->
             step.each {
                 def remoteGroups = [:]
-                println "yaml ==> ${yaml}"
                 def allRemotes = []
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
+                println "yaml ==> ${yaml}"
                 }
 
                 def commandGroups = [:]
