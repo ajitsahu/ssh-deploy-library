@@ -9,9 +9,8 @@ def call(String yamlName) {
                 def remoteGroups = [:]
                 def allRemotes = []
                 it.remote_groups.each {
-                    println "x value: ${it.allRemotes}"
+                    println "x value: ${it.remote_groups.each}"
                     remoteGroups[it] = yaml.remotes."$it"
-                
                 }
 
                 def commandGroups = [:]
