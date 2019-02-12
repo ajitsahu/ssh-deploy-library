@@ -63,6 +63,36 @@ def call(String yamlName) {
         }
     }
 }
+
+private transformIntoStep(stageName, remoteGroupName, remote, commandGroups, isSudo, config) {
+    return {
+        def finalRetryResult = true
+        commandGroups.each { commandGroupName, commands ->
+            echo "Running ${commandGroupName} group of commands."
+            commands.each { command ->
+                command.each { commandName, commandList ->
+                    commandList.each {
+                        validateCommands(stageName, remoteGroupName, commandGroupName, commandName, it)
+                        executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, it, isSudo)
+                            echo "DryRun Mode: Running ${commandName}."
+                            echo "Remote: ${remote}"
+                            echo "Command: ${it}"
+                     }
+                }
+            }
+        }
+    }
+}
+
+private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
+    if(commandName in ["gets", "puts"]) {
+        if(!command.from)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
+        if(!command.into)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
+    }
+}
+
 private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
     switch (commandName) {
         case "commands":
