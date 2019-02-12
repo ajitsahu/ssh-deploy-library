@@ -6,7 +6,8 @@ def call(String yamlName) {
         yaml.steps.each { stageName, step ->
             step.each {
                 println "yaml ==> ${yaml}"
-                def remoteGroups = [:].withDefault { key -> return [] }
+                def remoteGroups = [:]
+                remoteGroups.r_group_1
                 def allRemotes = []
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
