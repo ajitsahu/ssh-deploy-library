@@ -10,6 +10,9 @@ def call(String yamlName) {
                 println $remoteGroups
                 def allRemotes = []
                 it.remote_groups.each {
+                    if(!yaml.remote_groups."$it") {
+                        error "remotes groups are empty/invalid for the given stage: ${stageName}, command group: ${it}. Please check yml."
+                    }
                     remoteGroups[it] = yaml.remote_groups."$it"
                 }
 
