@@ -2,8 +2,6 @@
 
 def call(String yamlName) {
     def yaml = readYaml file: yamlName
-    def failedRemotes = []
-    def retriedRemotes = []
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
@@ -49,7 +47,7 @@ def call(String yamlName) {
                 if(allRemotes) {
                     if(allRemotes.size() > 1) {
                         def stepsForParallel = allRemotes.collectEntries { remote ->
-                            ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config, failedRemotes, retriedRemotes)]
+                            ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)]
                         }
                         stage(stageName + " \u2609 Size: ${allRemotes.size()}") {
                             parallel stepsForParallel
@@ -57,12 +55,11 @@ def call(String yamlName) {
                     } else {
                         def remote = allRemotes.first()
                         stage(stageName + "\n" + remote.groupName + "-" + remote.name) {
-                            transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config, failedRemotes, retriedRemotes).call()
+                            transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config).call()
                         }
                     }
                 }
             }
         }
     }
-    return [failedRemotes, retriedRemotes]
 }
