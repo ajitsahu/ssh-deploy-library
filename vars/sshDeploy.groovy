@@ -47,7 +47,7 @@ def call(String yamlName) {
                 if(allRemotes) {
                     if(allRemotes.size() > 1) {
                         def stepsForParallel = allRemotes.collectEntries { remote ->
-                            ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)]
+                            {["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)]}
                         }
                         stage(stageName + " \u2609 Size: ${allRemotes.size()}") {
                             parallel stepsForParallel
