@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
-import org.yaml.snakeyaml.Yaml
-Yaml yaml = new Yaml();
+
 def call(String yamlName) {
-    def yaml = readYaml file: yamlName
+    def yaml = readYaml file: ("dev/deploy.yml")
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
