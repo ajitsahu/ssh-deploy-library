@@ -177,4 +177,3 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             break
     }
 }
-}
