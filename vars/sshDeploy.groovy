@@ -49,7 +49,7 @@ def call(String yamlName) {
                         def stepsForParallel = allRemotes.collectEntries { remote ->
                             ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups)]
                         }
-                        stage(stageName) {
+                        stage(stageName + " \u2609 Size: ${allRemotes.size()}") {
                             parallel stepsForParallel
                         }
                     } else {
