@@ -47,7 +47,7 @@ def call(String yamlName) {
                 if(allRemotes) {
                     if(allRemotes.size() > 1) {
                         def stepsForParallel = allRemotes.collectEntries { remote ->
-                            "${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)
+                            ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)]
                         }
                         stage(stageName + " \u2609 Size: ${allRemotes.size()}") {
                             parallel stepsForParallel
@@ -61,5 +61,27 @@ def call(String yamlName) {
                 }
             }
         }
+    }
+}
+private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
+    switch (commandName) {
+        case "commands":
+            sshCommand remote: remote, command: command, sudo: isSudo
+            break
+        case "scripts":
+            sshScript remote: remote, script: command
+            break
+        case "gets":
+            sshGet remote: remote, from: command.from, into: command.into, override: command.override
+            break
+        case "puts":
+            sshPut remote: remote, from: command.from, into: command.into
+            break
+        case "removes":
+            sshRemove remote: remote, path: command
+            break
+        default:
+            error "Invalid Command: ${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName}"
+            break
     }
 }
