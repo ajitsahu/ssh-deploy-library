@@ -1,7 +1,12 @@
 #!/usr/bin/env groovy
 
-def call(String yamlName){
+def call(String yamlName, boolean dryRun){
     def yaml = readYaml file: yamlName
+    def call(yaml, boolean dryRun) {
+    if(!yaml.config)
+        error "config missing in the given yml file."
+    if(!yaml.config.credentials_id)
+        error "config->credentials_id is missing."
     def failedRemotes = []
     def retriedRemotes = []
 
