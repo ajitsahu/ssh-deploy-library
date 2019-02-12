@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import org.yaml.snakeyaml.Yaml
 def call(String yamlName) {
     def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
