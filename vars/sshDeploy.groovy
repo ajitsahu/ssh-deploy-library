@@ -2,6 +2,8 @@
 
 def call(String yamlName) {
     def yaml = readYaml file: yamlName
+    def failedRemotes = []
+    def retriedRemotes = []
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
@@ -62,4 +64,5 @@ def call(String yamlName) {
             }
         }
     }
+    return [failedRemotes, retriedRemotes]
 }
