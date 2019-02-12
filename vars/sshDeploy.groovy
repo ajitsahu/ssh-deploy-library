@@ -5,6 +5,7 @@ def call(String yamlName) {
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
+                println "yaml ==> ${yaml}"
                 def remoteGroups = [:]
                 def allRemotes = []
                 it.remote_groups.each {
