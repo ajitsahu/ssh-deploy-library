@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-def call(String deploy.yml) {
+def call(String yamlName) {
     def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
