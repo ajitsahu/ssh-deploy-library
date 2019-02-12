@@ -7,7 +7,6 @@ def call(String yamlName) {
             step.each {
                 println "yaml ==> ${yaml}"
                 def remoteGroups = [:].withDefault { key -> return [] }
-                listOfObjects.each { map.get(it.myKey).add(it.myValue) }
                 def allRemotes = []
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
