@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+package com.javacodegeeks.groovy.map
+import groovy.transform.ToString
 def call(String yamlName) {
     def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
