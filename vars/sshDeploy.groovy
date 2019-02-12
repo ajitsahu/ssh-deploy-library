@@ -7,7 +7,7 @@ def call(String yamlName) {
             step.each {
                 println "yaml ==> ${yaml}"
                 def remoteGroups = [:]
-                remoteGroups.r_group_1
+                println $remoteGroups
                 def allRemotes = []
                 it.remote_groups.each {
                     remoteGroups[it] = yaml.remotes."$it"
