@@ -1,7 +1,8 @@
 #!/usr/bin/env groovy
 
 def call(String yamlName, boolean dryRun) {
-    @sshDeploy(yamlName, dryRun)
+    sshDeploy(yamlName, dryRun)
+    return true
 }
 
 def call(yaml, boolean dryRun) {
