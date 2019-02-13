@@ -2,7 +2,7 @@
 
 def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
-    sshDeploy(yamlName, dryRun)
+    sshDeploy(yamlName, boolean dryRun)
 }
 
 def call(yaml, boolean dryRun) {
