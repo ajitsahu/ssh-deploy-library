@@ -1,6 +1,6 @@
 #!/usr/bin/groovy
 
-def call(String yamlName) {
+def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     if(!yaml.config)
         error "config missing in the given yml file."
