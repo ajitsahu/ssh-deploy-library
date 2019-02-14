@@ -2,7 +2,8 @@
 
 boolean dryRun = true
 
-def call(yaml, dryRun) {
+def call(String yamlName, dryRun) {
+    def yaml = readYaml file: yamlName
     if(!yaml.config)
         error "config missing in the given yml file."
     if(!yaml.config.credentials_id)
