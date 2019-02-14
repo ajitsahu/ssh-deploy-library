@@ -1,11 +1,8 @@
 #!/usr/bin/env groovy
 
 boolean dryRun = true
-def call(String yamlName, boolean dryRun) {
-    sshDeploy(yamlName, dryRun)
-}
 
-def call(yaml, boolean dryRun) {
+def call(yaml, dryRun) {
     if(!yaml.config)
         error "config missing in the given yml file."
     if(!yaml.config.credentials_id)
