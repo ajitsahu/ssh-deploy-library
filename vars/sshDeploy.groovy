@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-
+import hudson.model.*
 def call(String yamlName) {
     def yaml = readYaml file: yamlName
     if(!yaml.config)
