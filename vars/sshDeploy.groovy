@@ -1,11 +1,10 @@
 #!/usr/bin/env groovy
 
-def call(String yamlName) {
+def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
         yaml.steps.each { stageName, step ->
             step.each {
-                println "yaml ==> ${yaml}"
                 def remoteGroups = [:]
                 def allRemotes = []
                 
