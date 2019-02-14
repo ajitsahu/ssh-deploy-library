@@ -99,7 +99,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshCommand remote: remote, command: command, sudo: isSudo
             break
         case "scripts":
-            sshScript remote: remote, script: command
+            sshScript remote: remote, script: command, sudo: isSudo
             break
         case "gets":
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
