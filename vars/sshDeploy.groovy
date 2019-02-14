@@ -3,6 +3,15 @@
 def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
+        
+        if(!userName && params.SSH_USER) {
+            error "userName is null or empty, please check credentials_id."
+        }
+
+        if(!password && params.PASSWORD) {
+            error "password is null or empty, please check credentials_id."
+        }
+        
         yaml.steps.each { stageName, step ->
             step.each {
                 def remoteGroups = [:]
