@@ -2,7 +2,7 @@
 
 def dryRun = dryRun.toBoolean()
 def call(String yamlName, boolean dryRun) {
-    sshDeploy(yamlName, dryRun)
+    sshDeploy(yamlName, boolean dryRun)
 }
 
 def call(yaml, boolean dryRun) {
