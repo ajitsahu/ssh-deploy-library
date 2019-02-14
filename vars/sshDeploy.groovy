@@ -1,33 +1,14 @@
 #!/usr/bin/env groovy
 
-def call(String yamlName, boolean dryRun) {
-    sshDeploy(yamlName, dryRun)
-}
-
-def call(yaml, boolean dryRun) {
-    if(!yaml.config)
-        error "config missing in the given yml file."
-    if(!yaml.config.credentials_id)
-        error "config->credentials_id is missing."
-
-    def failedRemotes = []
-    def retriedRemotes = []
-
+def call(String yamlName) {
+    def yaml = readYaml file: yamlName
     withCredentials([usernamePassword(credentialsId: yaml.config.credentials_id, passwordVariable: 'password', usernameVariable: 'userName')]) {
-
-        if(!userName && params.SSH_USER) {
-            error "userName is null or empty, please check credentials_id."
-        }
-
-        if(!password && params.PASSWORD) {
-            error "password is null or empty, please check credentials_id."
-        }
-
         yaml.steps.each { stageName, step ->
             step.each {
+                println "yaml ==> ${yaml}"
                 def remoteGroups = [:]
                 def allRemotes = []
-
+                
                 it.remote_groups.each {
                     if(!yaml.remote_groups."$it") {
                         error "remotes groups are empty/invalid for the given stage: ${stageName}, command group: ${it}. Please check yml."
@@ -35,7 +16,6 @@ def call(yaml, boolean dryRun) {
                     remoteGroups[it] = yaml.remote_groups."$it"
                 }
 
-                // Merge all the commands for the given group
                 def commandGroups = [:]
                 it.command_groups.each {
                     if(!yaml.command_groups."$it") {
@@ -43,9 +23,7 @@ def call(yaml, boolean dryRun) {
                     }
                     commandGroups[it] = yaml.command_groups."$it"
                 }
-
                 def isSudo = false
-                // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
                         if(!remote.host) {
@@ -53,7 +31,6 @@ def call(yaml, boolean dryRun) {
                         }
                         if(!remote.name)
                             remote.name = remote.host
-
                         if(params.SSH_USER) {
                             remote.user = params.SSH_USER
                             remote.password = params.PASSWORD
@@ -62,36 +39,15 @@ def call(yaml, boolean dryRun) {
                             remote.user = userName
                             remote.password = password
                         }
-
-                        // For now we are settings host checking off.
                         remote.allowAnyHosts = true
-
                         remote.groupName = remoteGroupName
-                        if(yaml.gateway) {
-                            def gateway = [:]
-                            gateway.name = yaml.gateway.name
-                            gateway.host = yaml.gateway.host
-                            gateway.allowAnyHosts = true
-
-                            if(params.SSH_USER) {
-                                gateway.user = params.SSH_USER
-                                gateway.password = params.PASSWORD
-                            } else {
-                                gateway.user = userName
-                                gateway.password = password
-                            }
-
-                            remote.gateway = gateway
-                        }
                         remote
                     }
                 }
-
-                // Execute in parallel.
                 if(allRemotes) {
                     if(allRemotes.size() > 1) {
                         def stepsForParallel = allRemotes.collectEntries { remote ->
-                            ["${remote.groupName}-${remote.name}" : transformIntoStep(dryRun, stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config, failedRemotes, retriedRemotes)]
+                            ["${remote.groupName}-${remote.name}" : transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config)]
                         }
                         stage(stageName + " \u2609 Size: ${allRemotes.size()}") {
                             parallel stepsForParallel
@@ -99,17 +55,16 @@ def call(yaml, boolean dryRun) {
                     } else {
                         def remote = allRemotes.first()
                         stage(stageName + "\n" + remote.groupName + "-" + remote.name) {
-                            transformIntoStep(dryRun, stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config, failedRemotes, retriedRemotes).call()
+                            transformIntoStep(stageName, remote.groupName, remote, commandGroups, isSudo, yaml.config).call()
                         }
                     }
                 }
             }
         }
     }
-    return [failedRemotes, retriedRemotes]
 }
 
-private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGroups, isSudo, config, failedRemotes, retriedRemotes) {
+private transformIntoStep(stageName, remoteGroupName, remote, commandGroups, isSudo, config) {
     return {
         def finalRetryResult = true
         commandGroups.each { commandGroupName, commands ->
@@ -118,36 +73,11 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
                 command.each { commandName, commandList ->
                     commandList.each {
                         validateCommands(stageName, remoteGroupName, commandGroupName, commandName, it)
-                        if(!dryRun) {
-                            def stepName = "${stageName} -> ${remoteGroupName.replace("_", " -> ")} -> ${commandGroupName} -> ${remote.host}"
-                            if (config.retry_with_prompt) {
-                                retryWithPrompt([stepName: stepName]) {
-                                    executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, it, isSudo)
-                                }
-                            } else if(config.retry_and_return) {
-                                def retryCount = config.retry_count ? config.retry_count.toInteger() : 2
-                                def (isSuccessful, failedAtleastOnce) = retryAndReturn([retryCount: retryCount]) {
-                                    executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, it, isSudo)
-                                }
-                                if(!isSuccessful) {
-                                    finalRetryResult = false
-                                    if(!(stepName in failedRemotes)) {
-                                        failedRemotes.add(stepName)
-                                    }
-                                } else if(failedAtleastOnce) {
-                                    if(!(stepName in retriedRemotes)) {
-                                        retriedRemotes.add(stepName)
-                                    }
-                                }
-                            } else {
-                                executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, it, isSudo)
-                            }
-                        } else {
+                        executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, it, isSudo)
                             echo "DryRun Mode: Running ${commandName}."
                             echo "Remote: ${remote}"
                             echo "Command: ${it}"
-                        }
-                    }
+                     }
                 }
             }
         }
