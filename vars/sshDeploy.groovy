@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(String, boolean)
-def call(String yamlName, boolean dryRun) {
+def call(String name = 'yamlName', boolean dryRun) {
     sshDeploy(yaml, dryRun)
 }
 
