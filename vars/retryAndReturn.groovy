@@ -1,4 +1,4 @@
-#!/usr/bin/groovy
+#!/usr/bin/env groovy
 def call(Map config = [:], body) {
     def retryCount = config.get('retryCount') ?: 2
     boolean failedAtleastOnce = false
