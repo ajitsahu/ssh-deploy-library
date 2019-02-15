@@ -8,7 +8,7 @@ def call(String yamlName, boolean dryRun) {
     sshDeploy(yamlName, dryRun)
 }
 
-def call(yaml, dryRun) {
+def call(yaml, boolean dryRun) {
     if(!yaml.config)
         error "config missing in the given yml file."
     if(!yaml.config.credentials_id)
