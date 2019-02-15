@@ -1,4 +1,4 @@
-#!/usr/bin/groovy
+#!/usr/bin/env groovy
 import static java.util.UUID.randomUUID
 
 def call(Map config = [:], body) {
