@@ -1,9 +1,5 @@
 #!/usr/bin/env groovy
 
-def call(String yamlName, boolean dryRun) {
-    sshDeploy(yamlName, false)
-}
-
 def call(yaml, boolean dryRun) {
     if(!yaml.config)
         error "config missing in the given yml file."
