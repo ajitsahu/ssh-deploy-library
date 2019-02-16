@@ -39,13 +39,9 @@ def call(String yamlName) {
                         }
                         if(!remote.name)
                             remote.name = remote.host
-                        if(params.SSH_USER) {
                             remote.user = params.SSH_USER
                             remote.password = params.PASSWORD
                             isSudo = true
-                        } else {
-                            remote.user = userName
-                            remote.password = password
                         }
                         remote.allowAnyHosts = true
                         remote.groupName = remoteGroupName
