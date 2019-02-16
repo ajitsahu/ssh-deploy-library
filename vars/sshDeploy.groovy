@@ -31,7 +31,7 @@ def call(String yamlName) {
                     }
                     commandGroups[it] = yaml.command_groups."$it"
                 }
-                def isSudo = true
+                def isSudo = false
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
                         if(!remote.host) {
