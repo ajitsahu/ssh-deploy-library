@@ -41,7 +41,7 @@ def call(String yamlName, boolean dryRun, boolean isSudo) {
                     commandGroups[it] = yaml.command_groups."$it"
                 }
 
-                if(!isSudo) {
+                def isSudo = false
                 // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
@@ -82,8 +82,6 @@ def call(String yamlName, boolean dryRun, boolean isSudo) {
                         }
                         remote
                     }
-                }
-
                 }
 
                 // Execute in parallel.
