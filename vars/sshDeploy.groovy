@@ -42,7 +42,6 @@ def call(String yamlName) {
                             remote.user = params.SSH_USER
                             remote.password = params.PASSWORD
                             isSudo = true
-                        }
                         remote.allowAnyHosts = true
                         remote.groupName = remoteGroupName
                         remote
