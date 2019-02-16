@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-@Library('ssh_deploy')
+
 def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     if(!yaml.config)
@@ -41,7 +41,7 @@ def call(String yamlName, boolean dryRun) {
                     commandGroups[it] = yaml.command_groups."$it"
                 }
 
-                def isSudo = false
+                def isSudo = true
                 // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
