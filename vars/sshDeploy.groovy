@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-
+@Library('ssh_deploy')
 def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     if(!yaml.config)
