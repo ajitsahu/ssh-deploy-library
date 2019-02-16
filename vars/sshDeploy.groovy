@@ -1,10 +1,14 @@
 #!/usr/bin/env groovy
 
-def call(String yamlName, boolean dryRun = false) {
-    sshDeploy(yamlName, dryRun)
+def call(String yamlName) {
+    sshDeploy(yaml, false)
 }
 
-def call(yaml, boolean dryRun = false) {
+def call(String yamlName, boolean dryRun) {
+    sshDeploy(yaml, dryRun)
+}
+
+def call(yaml, boolean dryRun) {
     if(!yaml.config)
         error "config missing in the given yml file."
     if(!yaml.config.credentials_id)
@@ -169,7 +173,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshCommand remote: remote, command: command, sudo: isSudo
             break
         case "scripts":
-            sshScript remote: remote, script: command, sudo: isSudo
+            sshScript remote: remote, script: command
             break
         case "gets":
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
