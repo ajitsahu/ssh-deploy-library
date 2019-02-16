@@ -84,7 +84,7 @@ def call(String yamlName, boolean dryRun, boolean isSudo) {
                     }
                 }
 
-            }
+                }
 
                 // Execute in parallel.
                 if(allRemotes) {
