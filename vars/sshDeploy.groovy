@@ -155,6 +155,8 @@ private validateCommands(stageName, remoteGroupName, commandGroupName, commandNa
     if(commandName in ["gets", "puts"]) {
         if(!command.from)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
+         if(!command.into)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
     }
 }
 
