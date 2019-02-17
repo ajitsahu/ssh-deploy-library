@@ -42,7 +42,7 @@ def call(String yamlName, boolean dryRun) {
                     commandGroups[it] = yaml.command_groups."$it"
                 }
 
-                def isSudo = true
+                def isSudo = false
                 // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
