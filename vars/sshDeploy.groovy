@@ -172,7 +172,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
             break
         case "puts":
-            sshPut remote: remote, from: command.from, into: command.into
+            sshPut remote: remote, from: command.from, into: command.into, sudo: isSudo
             break
         case "removes":
             sshRemove remote: remote, path: command
