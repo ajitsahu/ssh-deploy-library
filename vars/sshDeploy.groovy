@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(yamlName, boolean dryRun) {
-    sshDeploy(yamlName,dryRun)
+def call(String yamlName, boolean dryRun) {
     def yaml = readYaml file: yamlName
     if(!yaml.config)
         error "config missing in the given yml file."
@@ -42,7 +41,7 @@ def call(yamlName, boolean dryRun) {
                     commandGroups[it] = yaml.command_groups."$it"
                 }
 
-                def isSudo = true
+                def isSudo = false
                 // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
