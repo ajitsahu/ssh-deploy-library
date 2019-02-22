@@ -150,7 +150,12 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
         }
     }
 }
+def myFile = new File("script")
 
+def lines = myFile.readLines()
+lines.each {line ->
+ println line
+}
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
     if(commandName in ["gets", "puts"]) {
         if(!command.from)
