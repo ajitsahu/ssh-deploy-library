@@ -150,12 +150,7 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
         }
     }
 }
-def myFile = new File("script")
 
-def lines = myFile.readLines()
-lines.each {line ->
- println line
-}
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
     if(commandName in ["gets", "puts"]) {
         if(!command.from)
@@ -169,6 +164,11 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
     switch (commandName) {
         case "commands":
             sshCommand remote: remote, command: command, sudo: isSudo
+            def myFile = new File("test.sh")
+            def lines = myFile.readLines()
+                lines.each {line ->
+                    println line
+                }
             break
         case "scripts":
             sshScript remote: remote, script: command
