@@ -46,3 +46,50 @@ def call(String yamlName) {
         }
     }
 }
+private transformIntoStep(stageName, remoteGroupName, remote, commandGroups, isSudo, config) {
+    return {
+        def finalRetryResult = true
+        commandGroups.each { commandGroupName, commands ->
+            echo "Running ${commandGroupName} group of commands."
+            commands.each { command ->
+                command.each { commandName, commandList ->
+                    commandList.each {
+                        validateCommands(stageName, remoteGroupName, commandGroupName, commandName, it)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
+    if(commandName in ["gets", "puts"]) {
+        if(!command.from)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
+         if(!command.into)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
+    }
+}
+
+private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
+    switch (commandName) {
+        case "commands":
+            sshCommand remote: remote, command: command, sudo: isSudo
+            break
+        case "scripts":
+            sshScript remote: remote, script: command
+            break
+        case "gets":
+            sshGet remote: remote, from: command.from, into: command.into, override: command.override
+            break
+        case "puts":
+            sshPut remote: remote, from: from, into: into
+            break
+        case "removes":
+            sshRemove remote: remote, path: command
+            break
+        default:
+            error "Invalid Command: ${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName}"
+            break
+    }
+}
