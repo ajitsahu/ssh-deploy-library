@@ -169,10 +169,10 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshScript remote: remote, script: command
             break
         case "gets":
-            sshGet remote: remote, from: from, into: into, override: command.override
+            sshGet remote: remote, from: command.from, into: command.into, override: command.override
             break
         case "puts":
-            sshPut remote: remote, from: from, into: into
+            sshPut remote: remote, from: command, into: command
             break
         case "removes":
             sshRemove remote: remote, path: command
