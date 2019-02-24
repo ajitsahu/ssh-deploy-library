@@ -164,10 +164,6 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
     switch (commandName) {
         case "commands":
             sshCommand remote: remote, command: command, sudo: isSudo
-            def myFile = new File("command")
-            myFile.eachLine {line ->
-                    println line
-                }
             break
         case "scripts":
             sshScript remote: remote, script: command
