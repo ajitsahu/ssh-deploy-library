@@ -153,9 +153,9 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
 
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
     if(commandName in ["gets", "puts"]) {
-        if(!command.from)
+        if(command.from)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
-        if(!command.into)
+        if(command.into)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
     }
 }
@@ -172,7 +172,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
             break
         case "puts":
-            sshPut remote: remote, from: command.puts.from, into: commandputs.puts.into
+            sshPut remote: remote, from: command.from, into: command.into
             break
         case "removes":
             sshRemove remote: remote, path: command
