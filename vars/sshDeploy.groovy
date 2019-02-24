@@ -8,12 +8,12 @@ def call(String yamlName) {
                 def remoteGroups = [:]
                 def allRemotes = []
                 it.remote_groups.each {
-                    remoteGroups[it] = yaml.remotes."$it"
+                    remoteGroups[it] = yaml.remote_groups."$it"
                 }
 
                 def commandGroups = [:]
                 it.command_groups.each {
-                    commandGroups[it] = yaml.commands."$it"
+                    commandGroups[it] = yaml.command_groups."$it"
                 }
                 def isSudo = false
                 remoteGroups.each { remoteGroupName, remotes ->
