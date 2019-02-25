@@ -169,6 +169,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshScript remote: remote, script: command
             break
         case "gets":
+            println command.from
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
             break
         case "puts":
