@@ -151,15 +151,6 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
     }
 }
 
-private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
-    if(commandName in ["gets", "puts"]) {
-        if(!command.from)
-            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
-        if(!command.into)
-            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
-    }
-}
-
 private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
     switch (commandName) {
         case "commands":
@@ -169,7 +160,6 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshScript remote: remote, script: command
             break
         case "gets":
-            println command.from
             sshGet remote: remote, from: command.from, into: command.into, override: command.override
             break
         case "puts":
