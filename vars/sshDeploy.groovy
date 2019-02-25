@@ -150,7 +150,7 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
         }
     }
 }
-
+private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {}
 private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
     switch (commandName) {
         case "commands":
