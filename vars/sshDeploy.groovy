@@ -41,7 +41,7 @@ def call(String yamlName, boolean dryRun) {
                     commandGroups[it] = yaml.command_groups."$it"
                 }
 
-                def isSudo = false
+                def isSudo = true
                 // Append user and identity for all the remotes.
                 remoteGroups.each { remoteGroupName, remotes ->
                     allRemotes += remotes.collect { remote ->
@@ -171,7 +171,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshScript remote: remote, script: command
             break
         case "gets":
-            sshGet remote: remote, from: command.from, into: command.into, override: override
+            sshGet remote: remote, from: command.from, into: command.into
             break
         case "puts":
             sshPut remote: remote, from: command.from, into: command.into
