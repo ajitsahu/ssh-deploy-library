@@ -153,6 +153,7 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
     if(commandName in ["gets", "puts"]) {
         echo "from: ${command.from}"
+        echo "into: ${command.into}"
         if(!command.from)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
         if(!command.into)
