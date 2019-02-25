@@ -151,6 +151,7 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
     }
 }
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
+    def override = true
     if(commandName in ["gets", "puts"]) {
         echo "from: ${command.from}"
         echo "into: ${command.into}"
@@ -170,7 +171,7 @@ private executeCommands(remote, stageName, remoteGroupName, commandGroupName, co
             sshScript remote: remote, script: command
             break
         case "gets":
-            sshGet remote: remote, from: command.from, into: command.into
+            sshGet remote: remote, from: command.from, into: command.into, override: override
             break
         case "puts":
             sshPut remote: remote, from: command.from, into: command.into
