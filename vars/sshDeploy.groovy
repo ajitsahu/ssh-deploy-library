@@ -1,7 +1,14 @@
-#!/usr/bin/env groovy
+#!/usr/bin/groovy
+
+def call(String yamlName) {
+    sshDeploy(yamlName, false)
+}
 
 def call(String yamlName, boolean dryRun) {
-    def yaml = readYaml file: yamlName
+    sshDeploy(yamlName, dryRun)
+}
+
+def call(yaml, boolean dryRun) {
     if(!yaml.config)
         error "config missing in the given yml file."
     if(!yaml.config.credentials_id)
@@ -155,7 +162,7 @@ private validateCommands(stageName, remoteGroupName, commandGroupName, commandNa
     if(commandName in ["gets", "puts"]) {
         if(!command.from)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
-        if(command.into)
+        if(!command.into)
             error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
     }
 }
