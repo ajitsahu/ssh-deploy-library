@@ -150,7 +150,16 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
         }
     }
 }
-private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {}
+private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
+    if(commandName in ["gets", "puts"]) {
+        echo "from: ${command.from}"
+        if(!command.from)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> from is empty or null."
+        if(!command.into)
+            error "${stageName} -> ${remoteGroupName} -> ${commandGroupName} -> ${commandName} -> into is empty or null."
+    }
+}
+
 private executeCommands(remote, stageName, remoteGroupName, commandGroupName, commandName, command, isSudo) {
     switch (commandName) {
         case "commands":
