@@ -151,7 +151,6 @@ private transformIntoStep(dryRun, stageName, remoteGroupName, remote, commandGro
     }
 }
 private validateCommands(stageName, remoteGroupName, commandGroupName, commandName, command) {
-    def override = true
     if(commandName in ["gets", "puts"]) {
         echo "from: ${command.from}"
         echo "into: ${command.into}"
